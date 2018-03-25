@@ -19,12 +19,13 @@ app.use('/api',api);
 
 // Send all other requests to the Angular app
 app.get('*',(req, res) => {
-  res.sendfile(path.join(__dirname,'dist/index.html'));
+  res.sendFile(path.join(__dirname,'dist/index.html'));
 });
 
 // Set port
-const port = process.env.port || 8080;
+const port = process.env.PORT || '3000';
+app.set('port',port);
 
 // Server
 const server = http.createServer(app);
-server.listen(port,() => console.log(`Server listening on {$port}`));
+server.listen(port,() => console.log(`Running on localhost:${port}`));
