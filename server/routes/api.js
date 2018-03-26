@@ -5,8 +5,8 @@ const ObjectID = require('mongodb').ObjectID;
 
 // Connection
 const connection = (closure) => {
-  return MongoClient.connect('mongodb://localhost:27017/mean',(err,client) => {
-    const db = client.db('mean');
+  return MongoClient.connect('mongodb://uct4tj5hj1drea3:oZhGL0I5V5ukzOXuM4ON@bl5rclcirwkncyt-mongodb.services.clever-cloud.com:27017/bl5rclcirwkncyt',(err,client) => {
+    const db = client.db('bl5rclcirwkncyt');
     if (err) {
       return console.log('Database connection error')
     }
