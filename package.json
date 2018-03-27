@@ -4,13 +4,14 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng build | node server",
+    "start": "ng build | node server | node ./tasks/sass.js",
     "angular": "ng serve --host 0.0.0.0 --port 8080 --disable-host-check",
     "local": "node server",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "sass": "node ./tasks/sass.js"
   },
   "private": true,
   "dependencies": {
