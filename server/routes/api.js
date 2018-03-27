@@ -6,9 +6,9 @@ const ObjectID = require('mongodb').ObjectID;
 // Connection
 const connection = (closure) => {
   let uri = process.env.MONGODB_ADDON_URI || 'mongodb://localhost:27017/mean';
-  let db = process.env.MONGODB_ADDON_DB || 'mean';
+  let dbName = process.env.MONGODB_ADDON_DB || 'mean';
   return MongoClient.connect(uri,(err,client) => {
-    const db = client.db(db);
+    const db = client.db(dbName);
     if (err) {
       return console.log('Database connection error')
     }
