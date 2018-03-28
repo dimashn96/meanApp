@@ -46,10 +46,4 @@ router.get('/users',(req,res) => {
   })
 });
 
-// ROFL message
-router.get('/message',(req,res) => {
-        response.data = {from: "Diman Shnitkovkiy", to: "Diman Bushuev", message: "Egor Kuleshov yebok"};
-        res.json(response);
-});
-
 module.exports = router;
