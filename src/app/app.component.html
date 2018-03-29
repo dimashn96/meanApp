@@ -1,5 +1,9 @@
 <h1>MongoDB is working</h1>
 
 <ul>
-  <li *ngFor="let user of users">{{user.name}}</li>
+  <li *ngFor="let user of users">
+    <p>{{user.fNm}} {{user.lNm}}</p>
+    <p>{{user.eml}}</p>
+    <br/>
+  </li>
 </ul>
