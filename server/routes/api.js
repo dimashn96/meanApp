@@ -76,7 +76,7 @@ router.put('/user', function (req, res, next) {
 
 // Auth
 router.post ('/login', function(req, res, next){
-  if (!req.body.username || !req.body.password) {
+  if (!req.body.name || !req.body.password) {
     return res.sendStatus(400)
   } else {
 
