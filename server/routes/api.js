@@ -3,6 +3,7 @@ const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // Connection
 const connection = (closure) => {
@@ -48,7 +49,6 @@ router.get('/users',(req,res) => {
 });
 
 // Add user
-
 router.put('/user', function (req, res, next) {
   let user = {};
   user.name = req.body.name;
@@ -72,6 +72,38 @@ router.put('/user', function (req, res, next) {
       });
     }
   });
+});
+
+// Auth
+router.post ('/login', function(req, res, next){
+  if (!req.body.username || !req.body.password) {
+    return res.sendStatus(400)
+  } else {
+
+    let name = req.body.name;
+    let password = req.body.password;
+    let user = {};
+
+    connection((db) => {
+      user = db.collection('users')
+        .findOne({nm: name},{pssH: 1});
+          if (!user) {
+            return res.sendStatus(500);
+          } else {
+            return res.sendStatus(201);
+          }
+        });
+
+    bcrypt.compare(password, user.pssH, function(err, valid){
+      if (err) {
+        return res.sendStatus(500)
+      }
+      if (!valid){ return res.sendStatus(401)}
+      let token = jwt.sign({ foo: 'bar' }, 'key', { algorithm: 'RS256'});
+      res.send(token)
+    })
+
+  }
 });
 
 module.exports = router;
