@@ -3,7 +3,21 @@ const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const jwt = require('json-web-token');
+
+const payload = {
+  "iss": "my_issurer",
+  "aud": "World",
+  "iat": 1400062400223,
+  "typ": "/online/transactionstatus/v2",
+  "request": {
+    "myTransactionId": "[myTransactionId]",
+    "merchantTransactionId": "[merchantTransactionId]",
+    "status": "SUCCESS"
+  }
+};
+
+const secret = 'TOPSECRETTTTT';
 
 // Connection
 const connection = (closure) => {
@@ -89,21 +103,21 @@ router.post ('/login', function(req, res, next){
         .findOne({nm: name}, function (err, result) {
           if (err) {
             res.sendStatus(500)
+          } else {
+            user.pssH = result.pssH;
+            bcrypt.compare(password, user.pssH, function (err, valid) {
+              if (err) {
+                return res.send(password + ' : ' + user.pssH)
+              }
+              if (!valid) {
+                return res.sendStatus(401)
+              }
+              jwt.encode(secret, payload, function (err, token) {
+                res.send(token);
+              })
+            })
           }
-          console.log(result);
-          res.send(result.toJSON());
         });
-
-      bcrypt.compare(password, user.pssH, function (err, valid) {
-        if (err) {
-          return res.send(password + ' : ' + user.pssH)
-        }
-        if (!valid) {
-          return res.sendStatus(401)
-        }
-        let token = jwt.sign({foo: 'bar'}, 'key', {algorithm: 'RS256'});
-        res.send(token)
-      })
     })
   }
 });
