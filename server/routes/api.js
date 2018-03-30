@@ -94,7 +94,7 @@ router.post ('/login', function(req, res, next){
 
     bcrypt.compare(password, user.pssH, function(err, valid){
       if (err) {
-        return res.send(password)
+        return res.send(user.pssH)
       }
       if (!valid){ return res.sendStatus(401)}
       let token = jwt.sign({ foo: 'bar' }, 'key', { algorithm: 'RS256'});
