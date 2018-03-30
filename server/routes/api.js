@@ -88,13 +88,13 @@ router.post ('/login', function(req, res, next){
       user = db.collection('users')
         .findOne({nm: name},{pssH: 1});
           if (!user) {
-            return res.send(user.toJSON());
+            return res.sendStatus(555);
           }
         });
 
     bcrypt.compare(password, user.pssH, function(err, valid){
       if (err) {
-        return res.sendStatus(500)
+        return res.send(password)
       }
       if (!valid){ return res.sendStatus(401)}
       let token = jwt.sign({ foo: 'bar' }, 'key', { algorithm: 'RS256'});
