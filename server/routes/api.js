@@ -90,7 +90,7 @@ router.post ('/login', function(req, res, next){
           if (err) {
             res.sendStatus(500)
           }
-          user.pssH = result.pssH;
+          res.send(result);
         });
 
       bcrypt.compare(password, user.pssH, function (err, valid) {
