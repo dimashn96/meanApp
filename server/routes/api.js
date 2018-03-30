@@ -85,12 +85,11 @@ router.post ('/login', function(req, res, next){
     let user = {};
 
     connection((db) => {
-      user = db.collection('users')
-        .findOne({nm: name},{pssH: 1});
-          if (!user) {
-            return res.sendStatus(555);
-          }
-        });
+      db.collection('users')
+        .findOne({nm: name}, function(err, result) {
+        if (err) {res.sendStatus(500)}
+        user.pssH = result.pssH;
+      });
 
     bcrypt.compare(password, user.pssH, function(err, valid){
       if (err) {
