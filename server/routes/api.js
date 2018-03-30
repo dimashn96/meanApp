@@ -86,20 +86,24 @@ router.post ('/login', function(req, res, next){
 
     connection((db) => {
       db.collection('users')
-        .findOne({nm: name}, function(err, result) {
-        if (err) {res.sendStatus(500)}
-        user.pssH = result.pssH;
-      });
+        .findOne({nm: name}, function (err, result) {
+          if (err) {
+            res.sendStatus(500)
+          }
+          user.pssH = result.pssH;
+        });
 
-    bcrypt.compare(password, user.pssH, function(err, valid){
-      if (err) {
-        return res.send(password + ' : ' + user.pssH)
-      }
-      if (!valid){ return res.sendStatus(401)}
-      let token = jwt.sign({ foo: 'bar' }, 'key', { algorithm: 'RS256'});
-      res.send(token)
+      bcrypt.compare(password, user.pssH, function (err, valid) {
+        if (err) {
+          return res.send(password + ' : ' + user.pssH)
+        }
+        if (!valid) {
+          return res.sendStatus(401)
+        }
+        let token = jwt.sign({foo: 'bar'}, 'key', {algorithm: 'RS256'});
+        res.send(token)
+      })
     })
-
   }
 });
 
