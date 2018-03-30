@@ -89,8 +89,6 @@ router.post ('/login', function(req, res, next){
         .findOne({nm: name},{pssH: 1});
           if (!user) {
             return res.sendStatus(500);
-          } else {
-            return res.sendStatus(201);
           }
         });
 
