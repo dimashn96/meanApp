@@ -93,11 +93,9 @@ router.post ('/login', function(req, res, next){
   if (!req.body.name || !req.body.password) {
     return res.sendStatus(400)
   } else {
-
     let name = req.body.name;
     let password = req.body.password;
     let user = {};
-
     connection((db) => {
       db.collection('users')
         .findOne({nm: name}, function (err, result) {
@@ -107,7 +105,7 @@ router.post ('/login', function(req, res, next){
             user.pssH = result.pssH;
             bcrypt.compare(password, user.pssH, function (err, valid) {
               if (err) {
-                return res.send(password + ' : ' + user.pssH)
+                return res.send(500)
               }
               if (!valid) {
                 return res.sendStatus(401)
