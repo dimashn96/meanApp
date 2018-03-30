@@ -51,15 +51,15 @@ router.get('/users',(req,res) => {
 // Add user
 router.put('/user', function (req, res, next) {
   let user = {};
-  user.name = req.body.name;
-  user.createdDate = new Date();
-  user.role = 'user';
+  user.nm = req.body.name;
+  user.crDt = new Date();
+  user.rl = 'user';
   let password = req.body.password;
   bcrypt.hash(password, 10, function (err, passH) {
     if (err) {
       res.sendStatus(500);
     } else {
-      user.password = passH;
+      user.pssH = passH;
       connection((db) => {
         db.collection('users')
           .insertOne(user, function (err, result) {
