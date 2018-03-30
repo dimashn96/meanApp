@@ -12,7 +12,7 @@ const connection = (closure) => {
     if (err) {
       return console.log('Database connection error')
     }
-      closure(db);
+    closure(db);
   })
 };
 
