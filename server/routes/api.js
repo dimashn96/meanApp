@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
+const bcrypt = require('bcrypt');
 
 // Connection
 const connection = (closure) => {
@@ -44,6 +45,33 @@ router.get('/users',(req,res) => {
         sendError(err,res);
       })
   })
+});
+
+// Add user
+
+router.put('/user', function (req, res, next) {
+  let user = {};
+  user.name = req.body.name;
+  user.createdDate = new Date();
+  user.role = 'user';
+  let password = req.body.password;
+  bcrypt.hash(password, 10, function (err, passH) {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      user.password = passH;
+      connection((db) => {
+        db.collection('users')
+          .insertOne(user, function (err, result) {
+            if (err) {
+              return res.sendStatus(500);
+            } else {
+              res.sendStatus(201);
+            }
+          });
+      });
+    }
+  });
 });
 
 module.exports = router;
