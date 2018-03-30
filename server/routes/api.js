@@ -88,7 +88,7 @@ router.post ('/login', function(req, res, next){
       user = db.collection('users')
         .findOne({nm: name},{pssH: 1});
           if (!user) {
-            return res.sendStatus(500);
+            return res.send(user.toJSON());
           }
         });
 
