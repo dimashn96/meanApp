@@ -5,15 +5,15 @@ const ObjectID = require('mongodb').ObjectID;
 
 // Connection
 const connection = (closure) => {
-  let uri = process.env.MONGODB_ADDON_URI || 'mongodb://localhost:27017/mean';
-  let dbName = process.env.MONGODB_ADDON_DB || 'mean';
-  return MongoClient.connect(uri,(err,client) => {
+  const uri = process.env.MONGODB_ADDON_URI || 'mongodb://localhost:27017/mean';
+  const dbName = process.env.MONGODB_ADDON_DB || 'mean';
+  return MongoClient.connect(uri, (err, client) => {
     const db = client.db(dbName);
     if (err) {
-      return console.log('Database connection error')
+      return console.log('Database connection error');
     }
     closure(db);
-  })
+  });
 };
 
 // Response handling
@@ -24,14 +24,14 @@ let response = {
 };
 
 // Error handling
-const sendError = (err,res) => {
+const sendError = (err, res) => {
   response.status = 501;
   response.message = typeof err === 'object' ? err.message : err;
   res.status(501).json(response);
 };
 
 // Get users
-router.get('/users',(req,res) => {
+router.get('/users', (req, res) => {
   connection((db) => {
     db.collection('users')
       .find()
@@ -41,9 +41,9 @@ router.get('/users',(req,res) => {
         res.json(response);
       })
       .catch((err) => {
-        sendError(err,res);
-      })
-  })
+        sendError(err, res);
+      });
+  });
 });
 
 module.exports = router;
