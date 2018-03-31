@@ -96,12 +96,12 @@ router.post ('/login', function(req, res, next){
             user.pssH = result.pssH;
             bcrypt.compare(password, user.pssH, function (err, valid) {
               if (err) {
-                return res.send(500)
+                return res.send(500);
               }
               if (!valid) {
-                return res.sendStatus(401)
+                return res.sendStatus(401);
               }
-              jwt.encode(secret, payload, function (err, token) {
+              jwt.encode(secret, {name: name}, function (err, token) {
                 res.send(token);
               });
             });
@@ -124,6 +124,29 @@ router.get('/user', function (req, res) {
       }
     });
   }
+});
+
+// Get user by token
+router.get('/account', function(req, res) {
+  if (!req.headers['x-auth']) {
+    return res.sendStatus(401);
+  }
+  jwt.decode(secret, req.headers['x-auth'], function (err, decodedPayload, decodedHeader) {
+    if (err) {
+      return res.sendStatus(401);
+    } else {
+      connection((db) => {
+        db.collection('users')
+          .findOne({nm: decodedPayload.name}, function (err, result) {
+            if (err) {
+              res.sendStatus(500);
+            } else {
+              res.send(result);
+            }
+          });
+      });
+    }
+  });
 });
 
 module.exports = router;
