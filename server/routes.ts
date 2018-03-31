@@ -6,9 +6,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('json-web-token');
 
 const secret = 'TOPSECRETTTTT';
-const payload = {
-  'message': 'mean'
-};
 
 // Connection
 const connection = (closure) => {
