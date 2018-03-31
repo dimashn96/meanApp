@@ -5,19 +5,10 @@ const ObjectID = require('mongodb').ObjectID;
 const bcrypt = require('bcrypt');
 const jwt = require('json-web-token');
 
-const payload = {
-  "iss": "my_issurer",
-  "aud": "World",
-  "iat": 1400062400223,
-  "typ": "/online/transactionstatus/v2",
-  "request": {
-    "myTransactionId": "[myTransactionId]",
-    "merchantTransactionId": "[merchantTransactionId]",
-    "status": "SUCCESS"
-  }
-};
-
 const secret = 'TOPSECRETTTTT';
+const payload = {
+  'message': 'mean'
+};
 
 // Connection
 const connection = (closure) => {
@@ -91,7 +82,7 @@ router.put('/user', function (req, res, next) {
 // Auth
 router.post ('/login', function(req, res, next){
   if (!req.body.name || !req.body.password) {
-    return res.sendStatus(400)
+    return res.sendStatus(400);
   } else {
     let name = req.body.name;
     let password = req.body.password;
@@ -100,7 +91,7 @@ router.post ('/login', function(req, res, next){
       db.collection('users')
         .findOne({nm: name}, function (err, result) {
           if (err) {
-            res.sendStatus(500)
+            res.sendStatus(500);
           } else {
             user.pssH = result.pssH;
             bcrypt.compare(password, user.pssH, function (err, valid) {
@@ -112,11 +103,26 @@ router.post ('/login', function(req, res, next){
               }
               jwt.encode(secret, payload, function (err, token) {
                 res.send(token);
-              })
-            })
+              });
+            });
           }
         });
-    })
+    });
+  }
+});
+
+// Get data by token
+router.get('/user', function (req, res) {
+  if (!req.headers['x-auth']) {
+    return res.sendStatus(401);
+  } else {
+    jwt.decode(secret, req.headers['x-auth'], function (err, decodedPayload, decodedHeader) {
+      if (err) {
+        return res.sendStatus(401);
+      } else {
+        return res.send(decodedPayload);
+      }
+    });
   }
 });
 
