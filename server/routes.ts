@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
+const bcrypt = require('bcrypt');
+const jwt = require('json-web-token');
+
+const secret = 'TOPSECRETTTTT';
 
 // Connection
 const connection = (closure) => {
@@ -43,6 +47,102 @@ router.get('/users', (req, res) => {
       .catch((err) => {
         sendError(err, res);
       });
+  });
+});
+
+// Add user
+router.put('/user', function (req, res, next) {
+  let user = {};
+  user.nm = req.body.name;
+  user.crDt = new Date();
+  user.rl = 'user';
+  let password = req.body.password;
+  bcrypt.hash(password, 10, function (err, passH) {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      user.pssH = passH;
+      connection((db) => {
+        db.collection('users')
+          .insertOne(user, function (err, result) {
+            if (err) {
+              return res.sendStatus(500);
+            } else {
+              res.sendStatus(201);
+            }
+          });
+      });
+    }
+  });
+});
+
+// Auth
+router.post ('/login', function(req, res, next){
+  if (!req.body.name || !req.body.password) {
+    return res.sendStatus(400);
+  } else {
+    let name = req.body.name;
+    let password = req.body.password;
+    let user = {};
+    connection((db) => {
+      db.collection('users')
+        .findOne({nm: name}, function (err, result) {
+          if (err) {
+            res.sendStatus(500);
+          } else {
+            user.pssH = result.pssH;
+            bcrypt.compare(password, user.pssH, function (err, valid) {
+              if (err) {
+                return res.send(500);
+              }
+              if (!valid) {
+                return res.sendStatus(401);
+              }
+              jwt.encode(secret, {name: name}, function (err, token) {
+                res.send(token);
+              });
+            });
+          }
+        });
+    });
+  }
+});
+
+// Get data by token
+router.get('/user', function (req, res) {
+  if (!req.headers['x-auth']) {
+    return res.sendStatus(401);
+  } else {
+    jwt.decode(secret, req.headers['x-auth'], function (err, decodedPayload, decodedHeader) {
+      if (err) {
+        return res.sendStatus(401);
+      } else {
+        return res.send(decodedPayload);
+      }
+    });
+  }
+});
+
+// Get user by token
+router.get('/account', function(req, res) {
+  if (!req.headers['x-auth']) {
+    return res.sendStatus(401);
+  }
+  jwt.decode(secret, req.headers['x-auth'], function (err, decodedPayload, decodedHeader) {
+    if (err) {
+      return res.sendStatus(401);
+    } else {
+      connection((db) => {
+        db.collection('users')
+          .findOne({nm: decodedPayload.name}, function (err, result) {
+            if (err) {
+              res.sendStatus(500);
+            } else {
+              res.send(result);
+            }
+          });
+      });
+    }
   });
 });
 
