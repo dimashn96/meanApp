@@ -1,25 +1,25 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import * as path from 'path';
 const http = require('http');
 const app = express();
 
 // API file for interacting with MongoDB
-const api = require('../server/routes.ts');
+const api = require('../build-server/routes');
 
 // Parsers
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 // Angular DIST output folder
-app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static(path.join(__dirname, '../build-client')));
 
 // API location
 app.use('/api', api);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  res.sendFile(path.join(__dirname, '../build-client/index.html'));
 });
 
 // Set port
