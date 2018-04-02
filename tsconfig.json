@@ -16,7 +16,8 @@
       "dom"
     ],
     "module": "system",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "outDir": "./dist/out-tsc"
   },
   "exclude": [
     "node_modules",
