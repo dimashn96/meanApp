@@ -4,9 +4,9 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng build && tsc && node dist-server/server",
+    "start": "ng build && tsc && node build-server/server",
     "angular": "ng serve --host 0.0.0.0 --port 8080 --disable-host-check",
-    "local": "tsc && node dist-server/server",
+    "local": "tsc && node build-server/server",
     "build": "ng build",
     "prod": "ng build --prod",
     "test": "ng test",

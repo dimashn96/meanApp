@@ -5,21 +5,21 @@ const http = require('http');
 const app = express();
 
 // API file for interacting with MongoDB
-const api = require('../dist-server/routes');
+const api = require('../build-server/routes');
 
 // Parsers
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 // Angular DIST output folder
-app.use(express.static(path.join(__dirname, '../dist-client')));
+app.use(express.static(path.join(__dirname, '../build-client')));
 
 // API location
 app.use('/api', api);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist-client/index.html'));
+  res.sendFile(path.join(__dirname, '../build-client/index.html'));
 });
 
 // Set port
