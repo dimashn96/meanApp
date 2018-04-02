@@ -1,6 +1,6 @@
 import * as express from 'express';
-const bodyParser = require('body-parser');
-const path = require('path');
+import * as bodyParser from 'body-parser';
+import * as path from 'path';
 const http = require('http');
 const app = express();
 

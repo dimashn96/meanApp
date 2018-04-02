@@ -1,4 +1,4 @@
-const express = require('express');
+import * as express from 'express';
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
@@ -52,12 +52,17 @@ router.get('/users', (req, res) => {
 
 // Add user
 router.put('/user', function (req, res, next) {
-  let user = {};
+  class User {
+    nm: string;
+    crDt: Date;
+    rl: string;
+    pssH: string;
+  }
+  const user = new User();
   user.nm = req.body.name;
   user.crDt = new Date();
   user.rl = 'user';
-  let password = req.body.password;
-  bcrypt.hash(password, 10, function (err, passH) {
+  bcrypt.hash(req.body.password, 10, function (err, passH) {
     if (err) {
       res.sendStatus(500);
     } else {
@@ -83,15 +88,15 @@ router.post ('/login', function(req, res, next){
   } else {
     let name = req.body.name;
     let password = req.body.password;
-    let user = {};
+    let pssH;
     connection((db) => {
       db.collection('users')
         .findOne({nm: name}, function (err, result) {
           if (err) {
             res.sendStatus(500);
           } else {
-            user.pssH = result.pssH;
-            bcrypt.compare(password, user.pssH, function (err, valid) {
+            pssH = result.pssH;
+            bcrypt.compare(password, pssH, function (err, valid) {
               if (err) {
                 return res.send(500);
               }
