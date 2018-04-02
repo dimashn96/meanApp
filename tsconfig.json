@@ -6,10 +6,10 @@
     "sourceMap": true
   },
   "include": [
-    "./src/server/**/*"
+    "./src-server/**/*"
   ],
   "exclude": [
     "node_modules",
-    "client"
+    "src"
   ]
 }

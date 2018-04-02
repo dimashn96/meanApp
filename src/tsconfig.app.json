@@ -1,5 +1,5 @@
 {
-  "extends": "../src/client/tsconfig.json",
+  "extends": "../src/tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
